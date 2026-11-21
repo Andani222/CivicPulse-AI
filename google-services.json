@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "549629499210",
+    "project_id": "civicpulse-d3f10",
+    "storage_bucket": "civicpulse-d3f10.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549629499210:android:23b3cfdaefb9ded4a493b3",
+        "android_client_info": {
+          "package_name": "com.andanim.CivicPulse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-SNmYMiwnKmQsLbZeteFDHVxoOrIrr34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

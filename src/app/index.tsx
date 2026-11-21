@@ -1,98 +1,204 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { router } from 'expo-router';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+} from 'react-native';
+import { useAuth } from '../context/AuthContext';
 
 export default function HomeScreen() {
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/login');
+  };
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.topBar}>
+        <View style={styles.header}>
+          <Text style={styles.logo}>CivicPulse</Text>
+          <Text style={styles.tagline}>
+            Your community. Your voice.
+          </Text>
+        </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+        <View style={styles.account}>
+          <Text style={styles.username} numberOfLines={1}>
+            {user?.name || 'Resident'}
+          </Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+          <Pressable
+            style={styles.logoutButton}
+            onPress={handleLogout}
+          >
+            <Text style={styles.logoutText}>Logout</Text>
+          </Pressable>
+        </View>
+      </View>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <View style={styles.welcome}>
+        <Text style={styles.title}>
+          What's happening near you?
+        </Text>
+        <Text style={styles.description}>
+          Report municipal problems and help make
+          your community a better place.
+        </Text>
+      </View>
+
+      <Pressable
+        style={styles.primaryButton}
+        onPress={() => router.push('/report')}
+      >
+        <Text style={styles.primaryButtonText}>
+          + Report an Issue
+        </Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.secondaryButton}
+        onPress={() => router.push('/map')}
+      >
+        <Text style={styles.secondaryButtonText}>
+          View Live Map
+        </Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.secondaryButton}
+        onPress={() => router.push('/my-reports')}
+      >
+        <Text style={styles.secondaryButtonText}>
+          My Reports
+        </Text>
+      </Pressable>
+
+      <View style={styles.info}>
+        <Text style={styles.infoTitle}>
+          How CivicPulse works
+        </Text>
+        <Text style={styles.infoText}>
+          1. Report a municipal issue
+        </Text>
+        <Text style={styles.infoText}>
+          2. Add a photo and location
+        </Text>
+        <Text style={styles.infoText}>
+          3. Follow the report's progress
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F7F9FC',
+    padding: 24,
     justifyContent: 'center',
+  },
+  topBar: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 48,
   },
-  safeArea: {
+  header: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  logo: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#1769AA',
+  },
+  tagline: {
+    fontSize: 15,
+    color: '#667085',
+    marginTop: 5,
+  },
+  account: {
+    alignItems: 'flex-end',
+    marginLeft: 8,
+    maxWidth: '42%',
+  },
+  username: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#172B4D',
+    marginBottom: 8,
+  },
+  logoutButton: {
+    backgroundColor: '#FEECEC',
+    paddingHorizontal: 13,
+    paddingVertical: 7,
+    borderRadius: 8,
+  },
+  logoutText: {
+    color: '#B42318',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  welcome: {
+    marginBottom: 28,
   },
   title: {
-    textAlign: 'center',
+    fontSize: 27,
+    fontWeight: 'bold',
+    color: '#172B4D',
+    marginBottom: 12,
   },
-  code: {
-    textTransform: 'uppercase',
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#596579',
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  primaryButton: {
+    backgroundColor: '#1769AA',
+    padding: 17,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: '#FFFFFF',
+    padding: 17,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#1769AA',
+    marginBottom: 12,
+  },
+  secondaryButtonText: {
+    color: '#1769AA',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  info: {
+    marginTop: 28,
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+  },
+  infoTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    color: '#172B4D',
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#596579',
+    marginBottom: 8,
   },
 });
