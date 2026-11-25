@@ -212,7 +212,7 @@ function App() {
 
       try {
         const response = await fetch(
-          '${API_BASE_URL}/api/admin/reports',
+          `${API_BASE_URL}/api/admin/reports`,
           {
             headers: {
               'Content-Type': 'application/json',
