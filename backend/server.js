@@ -635,12 +635,8 @@ app.get('/api/reports/map', authMiddleware, async (req, res) => {
         submissionStatus: report.submissionStatus || 'received',
         location: {
           // Approximate coordinates to protect residents' privacy.
-          latitude: Number(
-            Number(report.location.latitude).toFixed(2)
-          ),
-          longitude: Number(
-            Number(report.location.longitude).toFixed(2)
-          ),
+          latitude: Number(report.location.latitude),
+          longitude: Number(report.location.longitude),
         },
       }));
 
