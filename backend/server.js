@@ -408,6 +408,9 @@ app.post(
         `${AI_SERVICE_URL}/api/classify-image`,
         {
           method: 'POST',
+          headers: {
+            'x-ai-service-secret': process.env.AI_SERVICE_SECRET,
+          },
           body: formData,
           signal: AbortSignal.timeout(30000)
         }
@@ -536,6 +539,9 @@ app.post('/api/reports', authMiddleware, reportUpload.single('file'), async (req
           `${AI_SERVICE_URL}/api/ai/assess-report`,
           {
             method: 'POST',
+            headers: {
+              'x-ai-service-secret': process.env.AI_SERVICE_SECRET,
+            },
             body: formData,
             signal: AbortSignal.timeout(90000),
           }
